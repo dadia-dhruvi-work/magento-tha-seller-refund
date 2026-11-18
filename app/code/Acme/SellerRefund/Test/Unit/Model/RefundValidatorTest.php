@@ -51,6 +51,25 @@ class RefundValidatorTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    /**
+     * A request within the original ordered quantity must still be rejected
+     * when it exceeds the remaining refundable quantity.
+     *
+     * 10 ordered - 6 previously refunded = 4 remaining.
+     * Requesting 5 must be rejected.
+     */
+    public function testQuantityExceedingRemainingRefundableQuantityIsRejected(): void
+    {
+        $this->sellerLineResolver->method('sellerLines')->willReturn([
+            5 => $this->orderItem('10'),
+        ]);
+
+        $submission = new RefundSubmission('defect', [5 => '5']);
+
+        $this->expectException(ValidationException::class);
+        $this->validator->validate($this->order, $submission, [5 => '6']);
+    }
+
     public function testQuantityExceedingOrderedIsRejected(): void
     {
         $this->sellerLineResolver->method('sellerLines')->willReturn([
@@ -110,6 +129,19 @@ class RefundValidatorTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->validator->validate($this->order, $submission, []);
+    }
+
+    public function testCumulativeRefundExceedingOrderedQuantityIsRejected(): void
+    {
+        $this->sellerLineResolver->method('sellerLines')->willReturn([
+            5 => $this->orderItem('10'),
+        ]);
+
+        $submission = new RefundSubmission('defect', [5 => '5']);
+
+        $this->expectException(ValidationException::class);
+
+        $this->validator->validate($this->order, $submission, [5 => '6']);
     }
 
     private function orderItem(string $qtyOrdered): OrderItem&MockObject
