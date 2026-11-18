@@ -125,3 +125,28 @@ digests in
 [`runtime-and-licenses.md`](docs/build-notes/runtime-and-licenses.md), and
 common issues and remedies in
 [`troubleshooting.md`](docs/build-notes/troubleshooting.md).
+
+
+## Part 3 – Implementation
+
+### Cumulative Refund Quantity Validation
+
+Fixed a cumulative refund quantity validation defect in the PR-02 implementation.
+
+Previously refunded quantities are now subtracted from the original ordered quantity before validating a new refund request. This prevents multiple partial refunds from exceeding the order item's refundable quantity.
+
+A regression test was added to verify that a request exceeding the remaining refundable quantity is rejected.
+
+**Implementation commit:** [25f7932230e93e9cffa2ac73a5d1fdab162bdadc](https://github.com/dadia-dhruvi-work/magento-tha-seller-refund/commit/25f7932230e93e9cffa2ac73a5d1fdab162bdadc)
+
+### Verification
+
+The following commands were executed successfully in GitHub Codespaces:
+
+| Test suite | Command | Result |
+|---|---|---|
+| Targeted validator tests | `bin/assignment-test unit --filter RefundValidatorTest` | 8 passed |
+| Complete unit suite | `bin/assignment-test unit` | 30 tests, 85 assertions passed |
+| Integration suite | `bin/assignment-test integration` | 7 tests, 37 assertions passed |
+
+Note: The integration test output included a missing `/usr/sbin/sendmail` executable warning. It did not cause test failures.
