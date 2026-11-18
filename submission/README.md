@@ -12,7 +12,7 @@ Six written artifacts:
 - `02-refund-design.md` - your end-to-end refund flow (sequence diagram) and your
   delivery plan.
 - `03-architecture-review.md` - your architecture review and target-state extension.
-- `04-build-impact-note.md` - the impact note for your Part 3 fix.
+- `04_build-impact-note.md` - the impact note for your Part 3 fix.
 - `05-ai-usage.md` - a candid account of how you used AI (framed as transparency;
   it is not held against you).
 - `06-questions-and-next-steps.md` - your open questions, assumptions, where you
